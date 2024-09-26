@@ -1,0 +1,20 @@
+extends ./layout
+
+block contenido
+    .py-10
+        h1.text-4xl.my-10.font-extrabold.text-center Crear Nuevo Curso
+        form(action="/cursos" method="POST")
+            .mb-4
+                label(for="nombre") Nombre del Curso
+                input#nombre(type="text" name="nombre" required class="border p-2 w-full")
+            .mb-4
+                label(for="descripcion") Descripción
+                input#descripcion(type="text" name="descripcion" required class="border p-2 w-full")
+            .mb-4
+                label(for="profesor") Profesor
+                select#profesor(name="profesor_id" required class="border p-2 w-full")
+                    option(value="" disabled selected) Selecciona un profesor
+                    each profesor in profesores
+                        option(value=profesor.id)= profesor.nombre + " " + profesor.apellido
+            .mt-6
+                button(type="submit" class="bg-blue-500 text-white p-3 rounded") Crear Curso

@@ -1,0 +1,62 @@
+extends ./layout
+
+block contenido
+    .flex.justify-end.mb-4
+        ul.flex.space-x-4
+            li
+                a(href="/inscripciones/crearInscripcion" class="text-green-600 hover:text-green-800") Agregar Inscripción
+    
+    .py-10
+        h1.text-4xl.my-10.font-extrabold.text-center Proyecto
+            span.font-normal Universidad
+        h2.text-center.text-2xl.font-extrabold= pagina
+      
+        table.table-auto.w-full.mt-4
+            thead
+                tr
+                    th.text-left.text-gray-500.uppercase.px-6.py-3 Estudiante
+                    th.text-left.text-gray-500.uppercase.px-6.py-3 Curso
+                    th.text-left.text-gray-500.uppercase.px-6.py-3 Profesor
+                    th.text-left.text-gray-500.uppercase.px-6.py-3 Nota
+                    th.text-left.text-gray-500.uppercase.px-6.py-3 Fecha
+                    th.text-left.text-gray-500.uppercase.px-6.py-3 Acciones
+            tbody
+                each inscripcion in inscripciones
+                    tr
+                        td.px-6.py-4= inscripcion.estudiante.nombre + " " + inscripcion.estudiante.apellido
+                        td.px-6.py-4= inscripcion.curso.nombre
+                        td.px-6.py-4= inscripcion.curso.profesor.nombre + " " + inscripcion.curso.profesor.apellido
+                        td.px-6.py-4= inscripcion.nota
+                        td.px-6.py-4= inscripcion.fecha.toLocaleDateString()
+                        td.px-6.py-4
+                            a.text-blue-500(href=`/inscripciones/modificarInscripcion/${inscripcion.estudiante.id}/${inscripcion.curso.id}`) Editar
+                            a.text-red-500.ml-2(href="#", onclick=`eliminarInscripcion('${inscripcion.estudiante.id}', '${inscripcion.curso.id}')`) Eliminar
+
+block scripts
+    script.
+        function eliminarInscripcion(estudianteId, cursoId) {
+           if (confirm('¿Estás seguro de que deseas eliminar esta inscripción?')) {
+              fetch(`/inscripciones/${estudianteId}/${cursoId}`, {
+                 method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            
+            if (data.mensaje === 'Inscripción eliminada exitosamente') {
+                alert('Inscripción eliminada con éxito.');
+                window.location.reload(); 
+            } else {
+                alert(data.mensaje); 
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar la inscripción.');
+        });
+          }
+        }

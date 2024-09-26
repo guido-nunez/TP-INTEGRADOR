@@ -1,0 +1,54 @@
+extends ./layout
+
+block contenido
+    .flex.justify-end.mb-4
+        ul.flex.space-x-4
+            li
+                a(href="/estudiantes/crearEstudiantes", class="bg-green-600 hover:bg-green-700 text-red font-semibold py-2 px-4 rounded shadow transition duration-200") Agregar Estudiante
+
+    .py-10
+        h1.text-4xl.my-10.font-extrabold.text-center.text-black-600 Proyecto
+            span.font-normal.text-gray-700 Universidad
+        h2.text-center.text-2xl.font-extrabold.text-gray-800= pagina
+      
+        table.table-auto.w-full.mt-4.border-collapse
+            thead
+                tr.bg-gray-100
+                    th.text-left.text-gray-600.uppercase.px-6.py-3.font-medium Dni
+                    th.text-left.text-gray-600.uppercase.px-6.py-3.font-medium Nombre
+                    th.text-left.text-gray-600.uppercase.px-6.py-3.font-medium Apellido
+                    th.text-left.text-gray-600.uppercase.px-6.py-3.font-medium Email
+                    th.text-left.text-gray-600.uppercase.px-6.py-3.font-medium Acciones
+            tbody
+                each estudiante in estudiantes
+                    tr(class="hover:bg-gray-50")
+                        td.px-6.py-4.border-b= estudiante.dni
+                        td.px-6.py-4.border-b= estudiante.nombre        
+                        td.px-6.py-4.border-b= estudiante.apellido    
+                        td.px-6.py-4.border-b= estudiante.email
+                        td.px-6.py-4.border-b
+                            a(href=`/estudiantes/modificarEstudiante/${estudiante.id}`, class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded shadow transition duration-200") Editar
+                            a(href="#", onclick=`eliminarEstudiante('${estudiante.id}')`, class="bg-red-500 hover:bg-red-600 text-red font-semibold py-1 px-3 rounded shadow transition duration-200 ml-2") Eliminar
+
+block scripts
+    script.
+        function eliminarEstudiante(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este estudiante?')) {
+                fetch(`/estudiantes/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.mensaje === 'Estudiante eliminado') {
+                        alert('Estudiante eliminado con éxito.');
+                        window.location.reload(); 
+                    } else {
+                        alert(data.mensaje); 
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar el estudiante.');
+                });
+            }
+        }

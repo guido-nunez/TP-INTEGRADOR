@@ -1,0 +1,33 @@
+extends ./layout
+
+block contenido
+    .max-w-2xl.mx-auto.px-4.py-10
+        h1.text-4xl.font-extrabold.text-center Modificar Inscripción
+
+        form(method="POST" action=`/inscripciones/modificarInscripcion/${inscripcion.estudiante.id}/${inscripcion.curso.id}`)
+
+            .mb-6
+                label(for="estudiante_id" class="block text-sm font-medium text-gray-700") Estudiante
+                select(id="estudiante_id" name="estudiante_id" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required)
+                    option(value="") Selecciona un estudiante
+                    each estudiante in estudiantes
+                        option(value=estudiante.id selected=(inscripcion.estudiante.id == estudiante.id))= estudiante.nombre + " " + estudiante.apellido
+
+            .mb-6
+                label(for="curso_id" class="block text-sm font-medium text-gray-700") Curso
+                select(id="curso_id" name="curso_id" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required)
+                    option(value="") Selecciona un curso
+                    each curso in cursos
+                        option(value=curso.id selected=(inscripcion.curso.id == curso.id))= curso.nombre
+
+            .mb-6
+                label(for="nota" class="block text-sm font-medium text-gray-700") Nota
+                input(type="number" id="nota" name="nota" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" min="0" max="10" step="1" required value=inscripcion.nota)
+
+            .mb-6
+                label(for="fecha_inscripcion" class="block text-sm font-medium text-gray-700") Fecha de Inscripción
+                input(type="date" id="fecha_inscripcion" name="fecha_inscripcion" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required value=inscripcion.fechaInscripcion)
+
+
+            .flex.justify-center
+                button(type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") Modificar Inscripción
