@@ -27,7 +27,7 @@ const validar = () => [
     (req, res, next) => {
         const errores = (0, express_validator_1.validationResult)(req);
         if (!errores.isEmpty()) {
-            return res.render('creaEstudiantes', {
+            return res.render('crearEstudiantes', {
                 pagina: 'Crear Estudiante',
                 errores: errores.array()
             });
@@ -137,7 +137,6 @@ exports.modificar = modificar;
 const eliminar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        //console.log(`ID recibido para eliminar: ${id}`); 
         yield conexion_1.AppDataSource.transaction((transactionalEntityManager) => __awaiter(void 0, void 0, void 0, function* () {
             const cursosEstudiantesRepository = transactionalEntityManager.getRepository(CursoEstudianteModel_1.CursoEstudiante);
             const estudianteRepository = transactionalEntityManager.getRepository(EstudianteModel_1.Estudiante);

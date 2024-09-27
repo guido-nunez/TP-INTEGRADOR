@@ -1,25 +1,33 @@
 extends ./layout
 
 block contenido
-    .max-w-2xl.mx-auto.px-4.py-10
-        h1.text-4xl.font-extrabold.text-center Modificar Curso
+    .py-10
+        h1.text-4xl.my-10.font-extrabold.text-center Proyecto
+            span.font-normal Universidad
+        h2.text-center.text-2xl.font-extrabold Modificar Curso
 
-        form(method="POST" action=`/cursos/modificarCurso/${curso.id}`)
+        if errores
+            div(class="max-w-md mx-auto my-10")
+                each error in errores
+                    p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
 
-            .mb-6
-                label(for="nombre" class="block text-sm font-medium text-gray-700") Nombre del Curso
-                input(type="text" id="nombre" name="nombre" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required value=curso.nombre)
+        .mt-8.mx-auto.max-w-md
+            .bg-white.py-8.px-4.shadow
+                form(method="POST" action=`/cursos/modificarCurso/${curso.id}` noValidate)
 
-            .mb-6
-                label(for="descripcion" class="block text-sm font-medium text-gray-700") Descripción
-                textarea(id="descripcion" name="descripcion" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required)= curso.descripcion
+                    div
+                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="nombre") Nombre del Curso
+                        input#nombre.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(type="text" name="nombre" value=curso.nombre placeholder="Nombre del Curso" required)
 
-            .mb-6
-                label(for="profesor_id" class="block text-sm font-medium text-gray-700") Profesor
-                select(id="profesor_id" name="profesor_id" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required)
-                    option(value="") Selecciona un profesor
-                    each profesor in profesores
-                        option(value=profesor.id selected=(curso.profesor.id == profesor.id))= profesor.nombre + " " + profesor.apellido
+                    div
+                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="descripcion") Descripción
+                        textarea#descripcion.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(name="descripcion" placeholder="Descripción" required)= curso.descripcion
 
-            .flex.justify-center
-                button(type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") Modificar Curso
+                    div
+                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="profesor_id") Profesor
+                        select#profesor_id.w-full.px-3.py-2.border.border-gray-300.rounded-md(name="profesor_id" required)
+                            option(value="") Selecciona un profesor
+                            each profesor in profesores
+                                option(value=profesor.id selected=(curso.profesor.id == profesor.id))= profesor.nombre + " " + profesor.apellido
+
+                    button.bg-blue-500.text-white.px-4.py-2.rounded-md.mt-4(type="submit") Modificar Curso

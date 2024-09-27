@@ -11,7 +11,7 @@ router.get('/xAlumno/:id', inscripcionController_1.consultarxAlumno);
 router.get('/xCurso/:id', inscripcionController_1.consultarxCurso);
 router.get('/crearInscripcion', inscripcionController_1.mostrarFormularioInscripcion);
 router.get('/modificarInscripcion/:estudiante_id/:curso_id', inscripcionController_1.mostrarModificarInscripcion);
-router.post('/modificarInscripcion/:id/:curso_id', inscripcionController_1.modificarInscripcion);
+router.post('/modificarInscripcion/:estudiante_id/:curso_id', inscripcionController_1.modificarInscripcion);
 router.post('/', inscripcionController_1.inscribir);
 router.put('/', inscripcionController_1.calificar);
 router.delete('/:estudiante_id/:curso_id', inscripcionController_1.cancelarInscripcion);

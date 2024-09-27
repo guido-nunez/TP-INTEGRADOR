@@ -12,7 +12,7 @@ export class Estudiante{
     @PrimaryGeneratedColumn()
     id:number;
     @Column()
-    dni:string;
+    dni:number;
     @Column()
     nombre:string;
     @Column()

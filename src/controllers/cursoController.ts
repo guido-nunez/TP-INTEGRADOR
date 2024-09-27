@@ -1,10 +1,49 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AppDataSource } from '../db/conexion';
 import { Curso } from '../models/CursoModel';
 import { Profesor } from '../models/ProfesorModel';
 import { CursoEstudiante } from '../models/CursoEstudianteModel';
+import { check, validationResult } from 'express-validator';
 
+// Validaciones para los campos del curso
+export const validarCurso = () => [
+    check('nombre')
+        .notEmpty().withMessage('El nombre es obligatorio')
+        .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres'),
+    check('descripcion')
+        .notEmpty().withMessage('La descripción es obligatoria')
+        .isLength({ min: 5 }).withMessage('La descripción debe tener al menos 5 caracteres'),
+    check('profesor_id')
+        .isNumeric().withMessage('El profesor debe ser un número válido')
+        .custom(async (profesor_id) => {
+            const profesorRepository = AppDataSource.getRepository(Profesor);
+            const profesor = await profesorRepository.findOne({ where: { id: profesor_id } });
+            if (!profesor) {
+                throw new Error('El profesor no existe');
+            }
+        }),
 
+    
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errores = validationResult(req);
+        if (!errores.isEmpty()) {
+            try {
+                const profesorRepository = AppDataSource.getRepository(Profesor);
+                const profesores = await profesorRepository.find();
+                return res.render('crearCurso', {
+                    pagina: 'Crear Curso',
+                    profesores,
+                    errores: errores.array(),
+                    curso: req.body,
+                });
+            } catch (error) {
+                return res.status(500).send('Error al obtener los profesores');
+            }
+        } else {
+            next();
+        }
+    }
+];
 export const mostrarFormularioCrearCurso = async (req: Request, res: Response) => {
     try {
         const profesorRepository = AppDataSource.getRepository(Profesor);
@@ -70,6 +109,21 @@ export const consultarUno = async (req: Request, res: Response) => {
 
 
 export const insertar = async (req: Request, res: Response) => {
+    const errores = validationResult(req);
+
+    
+    if (!errores.isEmpty()) {
+        const profesorRepository = AppDataSource.getRepository(Profesor);
+        const profesores = await profesorRepository.find();  
+
+        return res.render('crearCurso', {
+            pagina: 'Crear Curso',
+            errores: errores.array(),
+            profesores,
+            datos: req.body 
+        });
+    }
+
     const { descripcion, profesor_id, nombre } = req.body;
 
     try {

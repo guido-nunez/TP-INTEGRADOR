@@ -14,6 +14,9 @@ export const validar = () => [
     check('apellido').notEmpty().withMessage('El apellido es obligatorio')
         .isLength({ min: 3 }).withMessage('El apellido debe tener al menos 3 caracteres'),
     check('email').isEmail().withMessage('Debe proporcionar un email válido'),
+    check('telefono')
+        .notEmpty().withMessage('El teléfono es obligatorio')
+        .isLength({ min: 8 }).withMessage('El teléfono debe tener al menos 8 caracteres'),
     (req: Request, res: Response, next: NextFunction) => {
         const errores = validationResult(req);
         if (!errores.isEmpty()) {

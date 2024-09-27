@@ -23,6 +23,9 @@ const validar = () => [
     (0, express_validator_1.check)('apellido').notEmpty().withMessage('El apellido es obligatorio')
         .isLength({ min: 3 }).withMessage('El apellido debe tener al menos 3 caracteres'),
     (0, express_validator_1.check)('email').isEmail().withMessage('Debe proporcionar un email válido'),
+    (0, express_validator_1.check)('telefono')
+        .notEmpty().withMessage('El teléfono es obligatorio')
+        .isLength({ min: 8 }).withMessage('El teléfono debe tener al menos 8 caracteres'),
     (req, res, next) => {
         const errores = (0, express_validator_1.validationResult)(req);
         if (!errores.isEmpty()) {
@@ -81,7 +84,7 @@ const insertar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             errores: errores.array(),
         });
     }
-    const { dni, nombre, apellido, email } = req.body;
+    const { dni, nombre, apellido, email, telefono } = req.body;
     try {
         yield conexion_1.AppDataSource.transaction((transactionalEntityManager) => __awaiter(void 0, void 0, void 0, function* () {
             const profesorRepository = transactionalEntityManager.getRepository(ProfesorModel_1.Profesor);
@@ -94,7 +97,7 @@ const insertar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             if (existeProfesor) {
                 throw new Error('El profesor ya existe.');
             }
-            const nuevoProfesor = profesorRepository.create({ dni, nombre, apellido, email });
+            const nuevoProfesor = profesorRepository.create({ dni, nombre, apellido, email, telefono });
             yield profesorRepository.save(nuevoProfesor);
         }));
         const profesores = yield conexion_1.AppDataSource.getRepository(ProfesorModel_1.Profesor).find();
@@ -112,14 +115,14 @@ const insertar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.insertar = insertar;
 const modificar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { dni, nombre, apellido, email } = req.body;
+    const { dni, nombre, apellido, email, telefono } = req.body;
     try {
         const profesorRepository = conexion_1.AppDataSource.getRepository(ProfesorModel_1.Profesor);
         const profesor = yield profesorRepository.findOne({ where: { id: parseInt(id) } });
         if (!profesor) {
             return res.status(404).send('Profesor no encontrado');
         }
-        profesorRepository.merge(profesor, { dni, nombre, apellido, email });
+        profesorRepository.merge(profesor, { dni, nombre, apellido, email, telefono });
         yield profesorRepository.save(profesor);
         return res.redirect('/profesores/listarProfesores');
     }

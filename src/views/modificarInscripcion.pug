@@ -7,18 +7,12 @@ block contenido
         form(method="POST" action=`/inscripciones/modificarInscripcion/${inscripcion.estudiante.id}/${inscripcion.curso.id}`)
 
             .mb-6
-                label(for="estudiante_id" class="block text-sm font-medium text-gray-700") Estudiante
-                select(id="estudiante_id" name="estudiante_id" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required)
-                    option(value="") Selecciona un estudiante
-                    each estudiante in estudiantes
-                        option(value=estudiante.id selected=(inscripcion.estudiante.id == estudiante.id))= estudiante.nombre + " " + estudiante.apellido
+                label(for="estudiante_nombre" class="block text-sm font-medium text-gray-700") Estudiante
+                input(type="text" id="estudiante_nombre" name="estudiante_nombre" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" readonly value=`${inscripcion.estudiante.nombre} ${inscripcion.estudiante.apellido}`)
 
             .mb-6
-                label(for="curso_id" class="block text-sm font-medium text-gray-700") Curso
-                select(id="curso_id" name="curso_id" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required)
-                    option(value="") Selecciona un curso
-                    each curso in cursos
-                        option(value=curso.id selected=(inscripcion.curso.id == curso.id))= curso.nombre
+                label(for="curso_nombre" class="block text-sm font-medium text-gray-700") Curso
+                input(type="text" id="curso_nombre" name="curso_nombre" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" readonly value=inscripcion.curso.nombre)
 
             .mb-6
                 label(for="nota" class="block text-sm font-medium text-gray-700") Nota
@@ -27,7 +21,6 @@ block contenido
             .mb-6
                 label(for="fecha_inscripcion" class="block text-sm font-medium text-gray-700") Fecha de Inscripción
                 input(type="date" id="fecha_inscripcion" name="fecha_inscripcion" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required value=inscripcion.fechaInscripcion)
-
 
             .flex.justify-center
                 button(type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") Modificar Inscripción

@@ -4,7 +4,8 @@ import {
     consultarUno,
     insertar,
     modificar,
-    eliminar
+    eliminar,
+    validar
 } from '../controllers/profesoresController';
 import { AppDataSource } from '../db/conexion';
 import { Profesor } from '../models/ProfesorModel'; 
@@ -41,8 +42,8 @@ router.get('/modificarProfesor/:id', async (req, res) => {
 });
 
 
-router.post('/', insertar);
-router.put('/:id', modificar);
+router.post('/', validar(), insertar);
+router.put('/:id',validar(), modificar);
 router.delete('/:id', eliminar);
 
 export default router;

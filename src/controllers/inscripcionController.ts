@@ -79,15 +79,11 @@ export const mostrarModificarInscripcion = async (req: Request, res: Response) =
 
 // Modificar Inscripción
 export const modificarInscripcion = async (req: Request, res: Response) => {
-    const { estudiante_id, fecha_inscripcion } = req.body;
-    
-    
-    const cursoId = parseInt(req.params.curso_id, 10); 
+    const { estudiante_id, curso_id } = req.params;
+    const { nota, fecha_inscripcion } = req.body;
+
+    const cursoId = parseInt(curso_id, 10); 
     const estudianteId = parseInt(estudiante_id, 10); 
-
-
-    console.log("Estudiante ID:", estudianteId);
-    console.log("Curso ID:", cursoId);
 
     if (isNaN(estudianteId) || isNaN(cursoId)) {
         return res.status(400).json({ message: 'El ID del estudiante o del curso no es válido.' });
@@ -101,11 +97,13 @@ export const modificarInscripcion = async (req: Request, res: Response) => {
         });
 
         
+        inscripcion.nota = parseFloat(nota);  
         inscripcion.fecha = new Date(fecha_inscripcion); 
 
         await inscripcionRepo.save(inscripcion);
 
-        res.status(200).json({ message: 'Inscripción modificada correctamente' });
+        
+        res.redirect('/inscripciones/listarInscripciones');
     } catch (error) {
         console.error("Error al modificar la inscripción:", error);
         res.status(500).json({ message: 'Error al modificar la inscripción' });

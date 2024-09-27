@@ -8,11 +8,11 @@ const cursoController_1 = require("../controllers/cursoController");
 const router = express_1.default.Router();
 router.get('/listarCursos', cursoController_1.consultarTodos);
 router.get('/crearCurso', cursoController_1.mostrarFormularioCrearCurso);
-router.post('/', cursoController_1.insertar);
+router.post('/crearCurso', (0, cursoController_1.validarCurso)(), cursoController_1.insertar);
 router.get('/modificarCurso/:id', cursoController_1.consultarUno);
-router.post('/modificarCurso/:id', cursoController_1.modificar);
+router.post('/modificarCurso/:id', (0, cursoController_1.validarCurso)(), cursoController_1.modificar);
 router.route('/:id')
-    .get(cursoController_1.consultarUno)
-    .put(cursoController_1.modificar)
+    .get((0, cursoController_1.validarCurso)(), cursoController_1.consultarUno)
+    .put((0, cursoController_1.validarCurso)(), cursoController_1.modificar)
     .delete(cursoController_1.eliminar);
 exports.default = router;

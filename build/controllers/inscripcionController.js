@@ -35,7 +35,6 @@ const mostrarFormularioInscripcion = (req, res) => __awaiter(void 0, void 0, voi
     }
 });
 exports.mostrarFormularioInscripcion = mostrarFormularioInscripcion;
-// Validar consulta de inscripciones
 const consultarInscripciones = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const inscripciones = yield conexion_1.AppDataSource.getRepository(CursoEstudianteModel_1.CursoEstudiante).find({
@@ -53,18 +52,16 @@ const consultarInscripciones = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.consultarInscripciones = consultarInscripciones;
-// inscripcionController.ts
 const mostrarModificarInscripcion = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const estudianteId = parseInt(req.params.estudiante_id); // ID del estudiante desde los parámetros
-    const cursoId = parseInt(req.params.curso_id); // ID del curso desde los parámetros
+    const estudianteId = parseInt(req.params.estudiante_id);
+    const cursoId = parseInt(req.params.curso_id);
     try {
-        // Busca la inscripción utilizando estudianteId y cursoId
         const inscripcion = yield conexion_1.AppDataSource.getRepository(CursoEstudianteModel_1.CursoEstudiante).findOne({
             where: {
-                estudiante: { id: estudianteId }, // Relación con el estudiante
-                curso: { id: cursoId } // Relación con el curso
+                estudiante: { id: estudianteId },
+                curso: { id: cursoId }
             },
-            relations: ['estudiante', 'curso'] // Carga las relaciones necesarias
+            relations: ['estudiante', 'curso']
         });
         if (!inscripcion) {
             return res.status(404).send('Inscripción no encontrada');
@@ -86,13 +83,10 @@ const mostrarModificarInscripcion = (req, res) => __awaiter(void 0, void 0, void
 exports.mostrarModificarInscripcion = mostrarModificarInscripcion;
 // Modificar Inscripción
 const modificarInscripcion = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { estudiante_id, fecha_inscripcion } = req.body;
-    // Conversión de parámetros de la URL a número
-    const cursoId = parseInt(req.params.curso_id, 10); // ID del curso
-    const estudianteId = parseInt(estudiante_id, 10); // ID del estudiante
-    // Imprimir los valores para depuración
-    console.log("Estudiante ID:", estudianteId);
-    console.log("Curso ID:", cursoId);
+    const { estudiante_id, curso_id } = req.params;
+    const { nota, fecha_inscripcion } = req.body;
+    const cursoId = parseInt(curso_id, 10);
+    const estudianteId = parseInt(estudiante_id, 10);
     if (isNaN(estudianteId) || isNaN(cursoId)) {
         return res.status(400).json({ message: 'El ID del estudiante o del curso no es válido.' });
     }
@@ -101,10 +95,12 @@ const modificarInscripcion = (req, res) => __awaiter(void 0, void 0, void 0, fun
         const inscripcion = yield inscripcionRepo.findOneOrFail({
             where: { curso: { id: cursoId }, estudiante: { id: estudianteId } }
         });
-        // Actualizar los valores de la inscripción
-        inscripcion.fecha = new Date(fecha_inscripcion); // Actualizar la fecha
+        // Actualiza la nota y la fecha de inscripción
+        inscripcion.nota = parseFloat(nota); // Asegúrate de convertir el valor a número
+        inscripcion.fecha = new Date(fecha_inscripcion);
         yield inscripcionRepo.save(inscripcion);
-        res.status(200).json({ message: 'Inscripción modificada correctamente' });
+        // Redirige al listado de inscripciones
+        res.redirect('/inscripciones/listarInscripciones');
     }
     catch (error) {
         console.error("Error al modificar la inscripción:", error);

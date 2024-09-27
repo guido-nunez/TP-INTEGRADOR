@@ -40,7 +40,7 @@ router.get('/modificarEstudiante/:id', (req, res) => __awaiter(void 0, void 0, v
         }
     }
 }));
-router.put('/:id', estudianteController_1.modificar);
+router.put('/:id', (0, estudianteController_1.validar)(), estudianteController_1.modificar);
 //eliminar
 router.delete('/:id', estudianteController_1.eliminar);
 exports.default = router;
